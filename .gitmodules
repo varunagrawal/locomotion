@@ -1,0 +1,3 @@
+[submodule "locomotion/envs/mujoco_menagerie"]
+	path = locomotion/envs/mujoco_menagerie
+	url = git@github.com:google-deepmind/mujoco_menagerie.git
