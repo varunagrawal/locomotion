@@ -1,8 +1,11 @@
 """Module with progress helper"""
 
+import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import List
 
+import numpy as np
+from jax import numpy as jnp
 from matplotlib import pyplot as plt
 
 
@@ -47,22 +50,37 @@ class Progress:
                 self.save_id += 1
 
 
-def add_rand_loc(worldbody, args, end_goal_dist=0):
+def add_box(name, position, size):
+    """Function to add a box to the environment"""
+    body = ET.Element('body', name=name, pos=' '.join(map(str, position)))
+    geom = ET.Element('geom',
+                      type='box',
+                      size=' '.join(map(str, size)),
+                      conaffinity='1',
+                      contype='1',
+                      condim='3')
+    body.append(geom)
+
+    return body
+
+
+def add_rand_loc(worldbody, end_goal_dist=0):
     """
     Initialize robot to a location normally distributed around the start point,
     and add markers via obstacles of height 0.001m.
     """
-    assert args is not None
+    ## The hardcoded values are from the original repository and shouldn't really make a big difference
+
     # Add boxes
-    num_loc = args['num_loc']
-    mean = args['mean']
-    cov = args['cov'] * np.eye(2)
+    num_loc = 100
+    mean = [0, 0]
+    cov = 0.5 * np.eye(2)
     num_cp = int(end_goal_dist) + 1
 
     spawn_locs = np.random.multivariate_normal(mean, cov, num_loc)
     spawn_locs = jnp.array(spawn_locs, dtype=float)
 
-    terrain_res = args['terrain_res']
+    terrain_res = 0.01
     obstacle_width = 0.25
     obstacle_length = 0.25
     height = 0.001
