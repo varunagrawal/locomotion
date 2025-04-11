@@ -11,10 +11,10 @@ from brax import base, math
 from brax.envs.base import PipelineEnv, State
 from brax.io import mjcf
 from etils import epath
-from fill.envs.add_obstacles import add_rand_loc
-from fill.rewards import get_barkour_config
-from fill.rewards.barkour import BarkourStraightRewards
 from jax import numpy as jnp
+
+from locomotion.rewards import BarkourStraightRewards, get_barkour_config
+from locomotion.utilities import add_rand_loc
 
 
 def domain_randomize(sys, rng):
